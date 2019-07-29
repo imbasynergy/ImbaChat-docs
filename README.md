@@ -1,1 +1,1 @@
-<div syle="color:red;">test</div>
+<div style="color:red;">test</div>
