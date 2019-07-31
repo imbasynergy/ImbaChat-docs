@@ -30,3 +30,4 @@ function imbachatWidget(){
 }
 imbachatWidget();
 ```
+Вместо `PARAMETRS` должны быть параметры такого вида:
