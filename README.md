@@ -21,10 +21,12 @@
 , где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
 
 2. Далее мы вставляем скрипт загрузки чата
-`function imbachatWidget(){
+```
+function imbachatWidget(){
     if(!window.ImbaChat){
 	return setTimeout(imbachatWidget, 50)
     }
     window.ImbaChat.load(PARAMETRS);
 }
-imbachatWidget();`
+imbachatWidget();
+```
