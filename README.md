@@ -17,10 +17,6 @@
 
 ##Frontend
 
-1. Для начала нужно подключить javascript ImbaChat'а. Подключение выглядит так 
-```
-<script src="http://dev2.imbachat.com/imbachat/v1/`DEV_ID`/widget"></script>
-
-```
+1. Для начала нужно подключить javascript ImbaChat'а. Подключение выглядит так `<script src="http://dev2.imbachat.com/imbachat/v1/``DEV_ID``/widget"></script>`
 , где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
 2. Далее мы вставляем скрипт загрузки чата
