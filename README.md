@@ -22,10 +22,9 @@
 
 2. Далее мы вставляем скрипт загрузки чата
 `function imbachatWidget(){
-	    if(!window.ImbaChat){
-	        return setTimeout(imbachatWidget, 50)
-	    }
-
-	    window.ImbaChat.load(PARAMETRS);
-	}
-	imbachatWidget();`
+    if(!window.ImbaChat){
+	return setTimeout(imbachatWidget, 50)
+    }
+    window.ImbaChat.load(PARAMETRS);
+}
+imbachatWidget();`
