@@ -1,6 +1,6 @@
 # ImbaChat-docs
 
-##Настройка плагина на нашем сайте
+## Настройка плагина на нашем сайте
 
 1. Зарегистирируйтесь на сайте http://dev2.imbachat.com.
 2. Зайдите на страницу с виджетами ( http://dev2.imbachat.com/admin/widgets ). Нажмите "создать" и заполните поля:
@@ -15,7 +15,7 @@
 3. Нажмиет "Создать".
 
 
-##Frontend
+## Frontend
 
 1. Для начала нужно подключить javascript ImbaChat'а. Подключение выглядит так `<script src="http://dev2.imbachat.com/imbachat/v1/``DEV_ID``/widget"></script>`
 , где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
