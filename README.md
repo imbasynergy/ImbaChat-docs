@@ -79,31 +79,8 @@
 
 Обратите внимание что в ответ ожидается именно массив с информацией об одном или более пользователях.
 
+### Пример реализации функции для отдачи информации о пользователях
 
-## Frontend
-
-1. Для начала нужно подключить javascript ImbaChat'а. Подключение выглядит так `<script src="http://imbachat.com/imbachat/v1/``DEV_ID``/widget"></script>`
-, где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
-
-2. Далее мы вставляем скрипт загрузки чата
-```
-function imbachatWidget(){
-    if(!window.ImbaChat){
-	return setTimeout(imbachatWidget, 50)
-    }
-    window.ImbaChat.load(PARAMETRS);
-}
-imbachatWidget();
-```
-Вместо `PARAMETRS` должны быть параметры такого вида:
-```
-{
-	user_id: id текущего пользователя,
-	token: JWT токен
-}
-```
-
-### Функция позволяющая получить информацию о пользователях для ImbaChat.
 ```
 public function getUser($str_ids){
 	//Логин и пароль разработчика
@@ -133,6 +110,29 @@ public function getUser($str_ids){
 	    $users[] = $user;
 	}
 	return json_encode($users);
+}
+```
+
+## Frontend
+
+1. Для начала нужно подключить javascript ImbaChat'а. Подключение выглядит так `<script src="http://imbachat.com/imbachat/v1/``DEV_ID``/widget"></script>`
+, где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
+
+2. Далее мы вставляем скрипт загрузки чата
+```
+function imbachatWidget(){
+    if(!window.ImbaChat){
+	return setTimeout(imbachatWidget, 50)
+    }
+    window.ImbaChat.load(PARAMETRS);
+}
+imbachatWidget();
+```
+Вместо `PARAMETRS` должны быть параметры такого вида:
+```
+{
+	user_id: id текущего пользователя,
+	token: JWT токен
 }
 ```
 
