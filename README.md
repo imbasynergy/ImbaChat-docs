@@ -19,7 +19,7 @@
 При настройке параметров виджета в личном кабинете есть параметры именуемые `API login` и `API password` они передаются при обращениях с сервера чата к серверу подключённого сайта в заголовке `Authorization`
 
 Пример проверки авторизации на php.
-``` 
+```php
     $login = Settings::get('dev_login');
     $password = Settings::get('dev_password');
 
@@ -81,7 +81,7 @@
 
 ### Пример реализации функции для отдачи информации о пользователях
 
-```
+```php
 <?php
 
 // credentials for getting users data from server:
@@ -154,7 +154,7 @@ echo json_encode($result);
 , где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
 
 2. Далее мы вставляем скрипт загрузки чата
-```
+```javascript
 function imbachatWidget(){
     if(!window.ImbaChat){
 	return setTimeout(imbachatWidget, 50)
@@ -172,7 +172,7 @@ imbachatWidget();
 ```
 
 ### Функция отдающая JWT токен.
-```
+```php
 function getJWT(){
 
 	// Create token header as a JSON string
