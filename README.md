@@ -34,7 +34,7 @@
     }
 ```
 
-Как видим в php параметры `API login` и `API password` из настроек виджета в личном кабинете на http://imbachat.com помещены в $_SERVER['PHP_AUTH_USER'] и $_SERVER['PHP_AUTH_PW']
+Как видим в php параметры `API login` и `API password` из настроек виджета в личном кабинете на http://imbachat.com помещены в `$_SERVER['PHP_AUTH_USER']` и `$_SERVER['PHP_AUTH_PW']`
 
 
 # Получение информации о людях
@@ -68,9 +68,9 @@
      "name" : "Артём",
      "profiles" : {
                     "11" : {
-                        "user_id" : "P11-".$value,
+                        "user_id" : "P11-A",
                         "avatar_url" : "http://comet-server.ru/doc/CometQL/Star.Comet-Chat/img/avatar0.png",
-                        "name" : "P11-"."Артём".$value,
+                        "name" : "P11-Артём",
                     },
                 }
     }
