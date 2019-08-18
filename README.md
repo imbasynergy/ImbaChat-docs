@@ -82,35 +82,70 @@
 ### Пример реализации функции для отдачи информации о пользователях
 
 ```
-public function getUser($str_ids){
-	//Логин и пароль разработчика
-	$login = \Config::get('imbasynergy.imbachatwidget::login');
-	$password = \Config::get('imbasynergy.imbachatwidget::password');
+<?php
 
-	//Аутентификация разработчика
-	if(!isset($_SERVER['PHP_AUTH_USER']) || ($_SERVER['PHP_AUTH_PW']!=$password) || strtolower($_SERVER['PHP_AUTH_USER'])!=$login)
-	{
-	    header('WWW-Authenticate: Basic realm="Backend"');
-	    header('HTTP/1.0 401 Unauthorized');
-	    echo 'Authenticate required!';
-	    die();
-	}
-
-	//Разделение строки с id пользователей, через символ, который вы прописали в поле "Символ разделения"
-	$ids = explode("cимвол разделения", $str_ids);
-	$users = array();
-
-	//Заполнение массива с пользователями
-	foreach ($ids as $id){
-	    $user_m = Получение пользователя по id;
-	    $user = array();
-	    $user['name'] = Имя пользователя;
-	    $user['user_id'] = $id;
-	    $user['avatar_url'] = Аватар пользователя ( не обязательно );
-	    $users[] = $user;
-	}
-	return json_encode($users);
+// credentials for getting users data from server:
+$login = "root";
+$password = "abc";
+ 
+if(!isset($_SERVER['PHP_AUTH_USER']) || ($_SERVER['PHP_AUTH_PW']!=$password) || strtolower($_SERVER['PHP_AUTH_USER'])!=$login)
+{
+    // AUTH FAIL
+    header('WWW-Authenticate: Basic realm="Backend"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo 'Authenticate required!';
+    die();
 }
+
+// AUTH SUCCESS
+
+// getting array of user ids:
+$id_array = preg_replace("/[^0-9,]/", '', $_GET['user_ids']);
+
+// establishing database connection:
+$db_connection = mysqli_connect("localhost", "user", "pass","bd", 3306);
+
+// set users table:
+$users_table = "ktvs_users";
+
+// set user ID column:
+$users_param = "user_id";
+
+// getting users from the database by their ids:
+$sql = "SELECT * FROM $users_table WHERE $users_param IN ( $id_array )";
+$users_query = mysqli_query($db_connection, $sql);
+$num_rows = mysqli_num_rows($users_query);
+$result = [];
+
+if($num_rows>0)
+{
+    while($rows = mysqli_fetch_assoc($users_query))
+    {
+        $user_id = $rows['user_id'];
+        $user_name = $rows['display_name'];
+        $login_date = $rows['last_login_date'];
+        $badge = $rows['custom10'];
+	if(!empty($rows['avatar']))
+	{
+        	$avatar = "https://www.example.com/contents/avatars/".$rows['avatar'];
+	} else {
+        	$avatar = false;
+	}
+        $link = "https://www.example.com/members/".$user_id."/";
+
+        $result[] = array(
+		'user_id' => $user_id,
+		'name' => $user_name,
+		'avatar_url' => $avatar,
+		'profile_url' => $link, 
+		'lastlogin' => strtotime($login_date),
+		'badge' => $badge
+	);
+    }
+}
+
+// JSON object with users data:
+echo json_encode($result);
 ```
 
 ## Frontend
