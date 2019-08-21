@@ -148,30 +148,13 @@ if($num_rows>0)
 echo json_encode($result);
 ```
 
-## Frontend
+### Авторизации пользователя в чате. 
 
-1. Для начала нужно подключить javascript ImbaChat'а. Подключение выглядит так `<script src="http://imbachat.com/imbachat/v1/``DEV_ID``/widget"></script>`
-, где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
+Для авторизации пользователей подключаемого сайта в чате необходимо правильно сгенерировать JWT токен и передать его как параметр user_key в объекте с другими параметрами инициализации чата.
 
-2. Далее мы вставляем скрипт загрузки чата
-```javascript
-function imbachatWidget(){
-    if(!window.ImbaChat){
-	return setTimeout(imbachatWidget, 50)
-    }
-    window.ImbaChat.load(PARAMETRS);
-}
-imbachatWidget();
-```
-Вместо `PARAMETRS` должны быть параметры такого вида:
-```
-{
-	user_id: id текущего пользователя,
-	token: JWT токен
-}
-```
+Для генерации jwt токена который чат примет как валидный надо иметь секретный ключ, его можно получить в форма настроек вашего виджета на сайте imbachat.com
 
-### Генерация JWT токена для авторизации пользователя в чате.
+Важно ...
 ```php
 <?php
 // comet server auth password
@@ -220,5 +203,29 @@ if(isset($_SESSION['user_id']))
     }
 
     echo getJWT($data, $pass, $dev_id);
+}
+```
+
+
+## Frontend
+
+1. Для начала нужно подключить javascript ImbaChat'а. Подключение выглядит так `<script src="http://imbachat.com/imbachat/v1/``DEV_ID``/widget"></script>`
+, где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
+
+2. Далее мы вставляем скрипт загрузки чата
+```javascript
+function imbachatWidget(){
+    if(!window.ImbaChat){
+	return setTimeout(imbachatWidget, 50)
+    }
+    window.ImbaChat.load(PARAMETRS);
+}
+imbachatWidget();
+```
+Вместо `PARAMETRS` должны быть параметры такого вида:
+```
+{
+	user_id: id текущего пользователя,
+	token: JWT токен
 }
 ```
