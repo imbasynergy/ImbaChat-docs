@@ -213,18 +213,14 @@ echo getJWT($user_id, $secret_key, 3600);
 
 2. Далее мы вставляем скрипт загрузки чата
 ```javascript
-function imbachatWidget(){
+function imbachatWidget(opt){
     if(!window.ImbaChat){
-	return setTimeout(imbachatWidget, 50)
+	return setTimeout(imbachatWidget, 50, opt)
     }
-    window.ImbaChat.load(PARAMETRS);
+    window.ImbaChat.load(opt);
 }
-imbachatWidget();
-```
-Вместо `PARAMETRS` должны быть параметры такого вида:
-```
-{
-	user_id: id текущего пользователя,
-	token: JWT токен
-}
-```
+imbachatWidget({
+	user_id: "<?= $user_id ?>",
+	token: "<?= getJWT($user_id, $secret_key, 3600) ?>"
+});
+```  
