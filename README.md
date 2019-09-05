@@ -29,7 +29,12 @@
     {
         header('WWW-Authenticate: Basic realm="Backend"');
         header('HTTP/1.0 401 Unauthorized');
-        echo 'Authenticate required!';
+        echo json_encode([
+                "code" => 401,
+                "version" => $this->getApiVersion()['version'],
+                "error" => 'Authenticate required!',
+                'debug' => ''
+            ]);
         die();
     }
 ```
@@ -85,7 +90,7 @@
 <?php
 
 // credentials for getting users data from server:
-$login = "root";
+$login = "root";   // Лучше конечно вынести в конфигурационный файл. но для простоты примера захардкодили тут.
 $password = "abc";
  
 if(!isset($_SERVER['PHP_AUTH_USER']) || ($_SERVER['PHP_AUTH_PW']!=$password) || strtolower($_SERVER['PHP_AUTH_USER'])!=$login)
@@ -93,7 +98,12 @@ if(!isset($_SERVER['PHP_AUTH_USER']) || ($_SERVER['PHP_AUTH_PW']!=$password) || 
     // AUTH FAIL
     header('WWW-Authenticate: Basic realm="Backend"');
     header('HTTP/1.0 401 Unauthorized');
-    echo 'Authenticate required!';
+    echo json_encode([
+                "code" => 401,
+                "version" => $this->getApiVersion()['version'],
+                "error" => 'Authenticate required!',
+                'debug' => ''
+            ]);
     die();
 }
 
@@ -152,58 +162,47 @@ echo json_encode($result);
 
 Для авторизации пользователей подключаемого сайта в чате необходимо правильно сгенерировать JWT токен и передать его как параметр user_key в объекте с другими параметрами инициализации чата.
 
-Для генерации jwt токена который чат примет как валидный надо иметь секретный ключ, его можно получить в форма настроек вашего виджета на сайте imbachat.com
-
-Важно ...
+Для генерации jwt токена, который чат примет как валидный, надо иметь секретный ключ (В личном кабинете подписан как `Secret key`). Его можно получить в форме настроек вашего виджета на сайте imbachat.com
+ 
+Пример реализации функции для генерации токена
 ```php
-<?php
-// comet server auth password
-$pass = 'lPXBFPqNg3f661JcegBY0N0dPXqUBdHXqj2cHf04PZgLHxT6z55e20ozojvMRvB8';
 
-// comet server account id
-$dev_id = '15';
-
-session_start();
-
-if(isset($_SESSION['user_id']))
+function getJWT($user_id, $secret_key, $time)
 {
+	// Create token header as a JSON string
+	$header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+	$pass = $secret_key;
+	$data = array();
+	$data['exp'] = (int)date('U')+$time;
+	$data['user_id'] = (int)$user_id;
 
-    $user_id = $_SESSION['user_info']['user_id'];
+	// Create token payload as a JSON string
+	$payload = json_encode($data);
 
-    $data = ['user_id'=>$user_id, 'exp'=>1683228800];
+	// Encode Header to Base64Url String
+	$base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
 
-    function getJWT($data, $pass, $dev_id = 0)
-    {
-        // Create token header as a JSON string
-        $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
-        
-        if(isset($data['user_id']))
-        {
-            $data['user_id'] = (int)$data['user_id'];
-        }
-        
-        // Create token payload as a JSON string
-        $payload = json_encode($data);
-        
-        // Encode Header to Base64Url String
-        $base64UrlHeader = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
-        
-        // Encode Payload to Base64Url String
-        $base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
-        
-        // Create Signature Hash
-        $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $pass.$dev_id, true);
-        
-        // Encode Signature to Base64Url String
-        $base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-        
-        // Create JWT
-        return trim($base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature);
+	// Encode Payload to Base64Url String
+	$base64UrlPayload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
 
-    }
+	// Create Signature Hash
+	$signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $pass, true);
 
-    echo getJWT($data, $pass, $dev_id);
+	// Encode Signature to Base64Url String
+	$base64UrlSignature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+
+	// Create JWT
+	return trim($base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature);
 }
+```
+
+Пример вызова функции для генерации токена
+
+```
+$user_id = 1;
+$secret_key = 'lPXBFPqNg3f661JcegBY0N0dPXqUBdHXqj2cHf04PZgLHxT6z55e20ozojvMRvB8';
+echo getJWT($user_id, $secret_key, 3600);
+
 ```
 
 
