@@ -208,6 +208,8 @@ echo getJWT($user_id, $secret_key, 3600);
 
 ## Frontend
 
+### Подключение виджета
+
 1. Для начала нужно подключить javascript ImbaChat'а. Подключение выглядит так `<script src="http://imbachat.com/imbachat/v1/``DEV_ID``/widget"></script>`
 , где вместо `DEV_ID` id виджета ( смотрите на странице виджета ).
 
@@ -223,4 +225,12 @@ imbachatWidget({
 	user_id: "<?= $user_id ?>",
 	token: "<?= getJWT($user_id, $secret_key, 3600) ?>"
 });
+```  
+
+### API виджета
+
+Создание диалога между текущим пользователем и пользователем с id=2 (на пример для реализации кнопки "Написать сообщение" в профиле пользователя)
+
+```javascript
+imbaChat.openDialog(2)
 ```  
